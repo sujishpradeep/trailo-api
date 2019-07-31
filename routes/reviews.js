@@ -11,6 +11,9 @@ const reviewInfoDb = [
     trail_name: "Skandagiri Hills",
     trail_state: "Karnataka",
     trail_height: "2200",
+    profilePicPath:
+      "uploads/2019-07-31T02:56:46.198Z00100sPORTRAIT_00100_BURST20190609105925214_COVER 2.jpg",
+
     content:
       "First review of Amazing place to visit with family. The place is kids friendly, although one cannot take pets along. "
   },
@@ -23,6 +26,7 @@ const reviewInfoDb = [
     trail_name: "Skandagiri Hills",
     trail_state: "Karnataka",
     trail_height: "2200",
+    profilePicPath: "uploads/amrutha.jpg",
     content:
       "Second review of Amazing place to visit with family. The place is kids friendly, although one cannot take pets along. "
   },
@@ -34,7 +38,8 @@ const reviewInfoDb = [
     trail_name: "Kodaikanal",
     trail_state: "Tamil Nadu",
     trail_height: "7700",
-
+    profilePicPath:
+      "uploads/2019-07-31T02:56:46.198Z00100sPORTRAIT_00100_BURST20190609105925214_COVER 2.jpg",
     content:
       "Third review of Amazing place to visit with family. The place is kids friendly, although one cannot take pets along. "
   },
@@ -46,7 +51,8 @@ const reviewInfoDb = [
     trail_name: "Kodaikanal",
     trail_state: "Tamil Nadu",
     trail_height: "7700",
-
+    profilePicPath:
+      "uploads/2019-07-31T02:56:46.198Z00100sPORTRAIT_00100_BURST20190609105925214_COVER 2.jpg",
     content:
       "Third review of Amazing place to visit with family. The place is kids friendly, although one cannot take pets along. "
   },
@@ -58,7 +64,8 @@ const reviewInfoDb = [
     trail_name: "Kodaikanal",
     trail_state: "Tamil Nadu",
     trail_height: "7700",
-
+    profilePicPath:
+      "uploads/2019-07-31T02:56:46.198Z00100sPORTRAIT_00100_BURST20190609105925214_COVER 2.jpg",
     content:
       "Third review of Amazing place to visit with family. The place is kids friendly, although one cannot take pets along. "
   },
@@ -70,7 +77,8 @@ const reviewInfoDb = [
     trail_name: "Kodaikanal",
     trail_state: "Tamil Nadu",
     trail_height: "7700",
-
+    profilePicPath:
+      "uploads/2019-07-31T02:56:46.198Z00100sPORTRAIT_00100_BURST20190609105925214_COVER 2.jpg",
     content:
       "Third review of Amazing place to visit with family. The place is kids friendly, although one cannot take pets along. "
   }

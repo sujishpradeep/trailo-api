@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Joi = require("joi");
-
+const UploadController = require("../middleware/upload");
 const trailCards = [
   {
     _id: "A1",
@@ -9,9 +9,9 @@ const trailCards = [
     state: "Karnataka",
     height: 2200,
     publishDate: "2018-01-03T19:04:28.809Z",
-    coverPhoto: "/images/skandagiri.jpeg",
     coverPhotoUploader: "Sujish",
-    peaceCount: 214
+    peaceCount: 214,
+    coverPhotoPath: "uploads/A1.jpeg"
   },
 
   {
@@ -20,9 +20,9 @@ const trailCards = [
     state: "Kerala",
     height: 4350,
     publishDate: "2018-01-03T19:04:28.809Z",
-    coverPhoto: "/images/thekkadi.jpeg",
     coverPhotoUploader: "Amrutha",
-    peaceCount: 315
+    peaceCount: 315,
+    coverPhotoPath: "uploads/A2.jpeg"
   },
 
   {
@@ -31,9 +31,9 @@ const trailCards = [
     state: "Arunachal",
     height: 5500,
     publishDate: "2018-01-03T19:04:28.809Z",
-    coverPhoto: "/images/ziro.jpeg",
     coverPhotoUploader: "Kiran",
-    peaceCount: 450
+    peaceCount: 450,
+    coverPhotoPath: "uploads/A3.jpeg"
   },
 
   {
@@ -42,11 +42,33 @@ const trailCards = [
     state: "Tamil Nadu",
     height: 7700,
     publishDate: "2018-01-03T19:04:28.809Z",
-    coverPhoto: "/images/kodai.jpeg",
     coverPhotoUploader: "Raihan",
-    peaceCount: 157
+    peaceCount: 157,
+    coverPhotoPath: "uploads/A4.jpeg"
   }
 ];
+
+//POSTS
+router.post("/", UploadController.upload.single("trailImage"), (req, res) => {
+  const { error } = validateTrail(req.body);
+
+  //If invalid, return 400 - Bad request
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const trailCard = {
+    _id: req.body._id,
+    name: req.body.name,
+    state: req.body.state,
+    height: req.body.height,
+    publishDate: req.body.publishDate,
+    coverPhoto: req.body.coverPhoto,
+    coverPhotoUploader: req.body.coverPhotoUploader,
+    peaceCount: req.body.peaceCount,
+    coverPhotoPath: req.file.path
+  };
+  trailCards.push(trailCard);
+  res.send(trailCard);
+});
 
 //GET
 router.get("/", (req, res) => {
@@ -62,27 +84,6 @@ router.get("/:id", (req, res) => {
       .status(404)
       .send("The trail with ID " + req.params.id + " not found");
 
-  res.send(trailCard);
-});
-
-//POSTS
-router.post("/", (req, res) => {
-  const { error } = validateTrail(req.body);
-
-  //If invalid, return 400 - Bad request
-  if (error) return res.status(400).send(error.details[0].message);
-
-  const trailCard = {
-    _id: req.body._id,
-    name: req.body.name,
-    state: req.body.state,
-    height: req.body.height,
-    publishDate: req.body.publishDate,
-    coverPhoto: req.body.coverPhoto,
-    coverPhotoUploader: req.body.coverPhotoUploader,
-    peaceCount: req.body.peaceCount
-  };
-  trailCards.push(trailCard);
   res.send(trailCard);
 });
 
