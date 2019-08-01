@@ -7,24 +7,23 @@ UploadController.setSubFolder("profiles");
 
 const profiles = [
   {
-    _id: "P1",
+    _id: "P10",
     name: "Sujish Pradeep",
     peaceMarked: ["A1", "A3"],
     bookMarked: ["A2", "A4"],
     place: "Kerala",
     bio: "Passionate about travel, food",
-    profilePicPath:
-      "uploads/2019-07-31T02:56:46.198Z00100sPORTRAIT_00100_BURST20190609105925214_COVER 2.jpg"
+    profilePicPath: "uploads/profiles/P10/profilepic.jpg"
   },
 
   {
-    _id: "P2",
+    _id: "P20",
     name: "Amrutha Muraleedharan",
     peaceMarked: ["A3", "A4"],
     bookMarked: ["A3", "A4"],
     place: "Sydney",
     bio: "Passionate about art, cooking",
-    profilePicPath: "uploads/amrutha.jpg"
+    profilePicPath: "uploads/profiles/P20/profilepic.jpg"
   }
 ];
 

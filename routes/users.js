@@ -12,36 +12,12 @@ const users = [
     password: "123456",
     peaceMarked: ["A1", "A3"],
     bookMarked: ["A2", "A4"],
-    isAdmin: "false"
-  },
-
-  {
-    username: "P1",
-    fullname: "Sujish Pradeep",
-    password: "123456",
-    peaceMarked: ["A1", "A3"],
-    bookMarked: ["A2", "A4"],
-    isAdmin: "false"
-  },
-  {
-    username: "TEST",
-    fullname: "Sujish Pradeep",
-    password: "123456",
-    peaceMarked: ["A1", "A3"],
-    bookMarked: ["A2", "A4"],
-    isAdmin: "false"
-  },
-  {
-    username: "TEST2",
-    fullname: "Sujish Pradeep",
-    password: "123456",
-    peaceMarked: ["A1"],
-    bookMarked: ["A2"],
-    isAdmin: "false"
+    isAdmin: "false",
+    profileid: 11111
   }
 ];
 
-//GET ID
+//GET USER BY ID
 router.get("/:id", (req, res) => {
   let user = users.find(u => u.username === req.params.id);
   if (!user)
@@ -51,7 +27,7 @@ router.get("/:id", (req, res) => {
   res.send(user);
 });
 
-//POSTS
+//SIGNUP - ADD NEW USER AND GENERATE SEND TOKEN
 router.post("/", (req, res) => {
   const { error } = validateUser(req.body);
 
@@ -60,13 +36,15 @@ router.post("/", (req, res) => {
 
   let userExists = users.find(u => u.username === req.body.username);
   if (userExists) return res.status(400).send("User already exists");
+  const randomID = Math.round(Math.random() * 100000);
 
   const user = {
     username: req.body.username,
     fullname: req.body.fullname,
     password: req.body.password,
     peaceMarked: [],
-    bookMarked: []
+    bookMarked: [],
+    profileid: randomID
   };
   users.push(user);
 
@@ -77,12 +55,20 @@ router.post("/", (req, res) => {
   res
     .header("x-auth-token", token)
     .header("access-control-expose-headers", "x-auth-token")
-    .send(_.pick(user, ["username", "fullname", "peaceMarked", "bookMarked"]));
+    .send(
+      _.pick(user, [
+        "username",
+        "fullname",
+        "peaceMarked",
+        "bookMarked",
+        "profileid"
+      ])
+    );
 
   // res.send(user);
 });
 
-//POST AUTH
+//LOGIN - CHECK IF USER EXISTS AND POST TOKEN
 router.post("/auth/", (req, res) => {
   let userExists = users.find(u => u.username === req.body.username);
   if (!userExists) return res.status(400).send("INVALID USER/PASSWORD");
@@ -99,27 +85,15 @@ generateAuthToken = function(user) {
       email: user.email,
       isAdmin: user.isAdmin,
       peaceMarked: user.peaceMarked,
-      bookMarked: user.bookMarked
+      bookMarked: user.bookMarked,
+      profileid: user.profileid
     },
     "vidly_jwtPrivateKey"
   );
   return token;
 };
 
-function validateUser(user) {
-  schema = {
-    fullname: Joi.string()
-      .min(3)
-      .required(),
-    username: Joi.required(),
-    password: Joi.required(),
-    isAdmin: Joi.optional()
-  };
-
-  return Joi.validate(user, schema);
-}
-
-//PUT
+//UPDATE USER PEACE MARKED
 router.put("/peace/:id/", (req, res) => {
   let user = users.find(c => c.username === req.params.id);
 
@@ -135,7 +109,7 @@ router.put("/peace/:id/", (req, res) => {
   res.send(user);
 });
 
-//PUT
+//UPDATE USER BOOK MARKED
 router.put("/:id/", auth, (req, res) => {
   //Look up user
   let user = users.find(c => c.username === req.params.id);
@@ -150,5 +124,18 @@ router.put("/:id/", auth, (req, res) => {
 
   res.send(user);
 });
+
+function validateUser(user) {
+  schema = {
+    fullname: Joi.string()
+      .min(3)
+      .required(),
+    username: Joi.required(),
+    password: Joi.required(),
+    isAdmin: Joi.optional()
+  };
+
+  return Joi.validate(user, schema);
+}
 
 module.exports = router;
