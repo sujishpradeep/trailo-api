@@ -40,9 +40,26 @@ router.post("/", async (req, res) => {
   //If invalid, return 400 - Bad request
   //if (error) return res.status(400).send(error.details[0].message);
 
-  const review = req.body;
-  reviews.push(review);
-  res.send(review);
+  //Validate input, return 400 - Bad request if error
+  console.log("req.body", req.body);
+
+  review = new Review({
+    user_id: req.body.user_id,
+    trail_id: req.body.trail_id,
+    user_name: req.body.user_name,
+    name: req.body.name,
+    trail_height: req.body.trail_height,
+    profilePicPath: req.body.profilePicPath,
+    content: req.body.content
+  });
+
+  try {
+    review = await review.save();
+    res.send(review);
+  } catch (error) {
+    console.log(error);
+    res.status(404).send(error.message);
+  }
 });
 
 module.exports = router;

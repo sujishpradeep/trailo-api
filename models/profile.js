@@ -5,7 +5,7 @@ const profileSchema = new mongoose.Schema({
   name: { type: String, required: true },
   place: String,
   bio: String,
-  profilePicPath: String,
+  profilePicPath: { type: String, default: "uploads/default/profilepic.jpg" },
   date: { type: Date, default: Date.now }
 });
 

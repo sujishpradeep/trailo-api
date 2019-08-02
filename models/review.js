@@ -3,10 +3,10 @@ const Joi = require("joi");
 
 const reviewSchema = new mongoose.Schema({
   user_id: { type: String, required: true },
-  name: String,
   user_name: { type: String, required: true },
   trail_id: { type: String, required: true },
   trail_state: { type: String, default: Date.now },
+  name: String,
   trail_height: Number,
   profilePicPath: String,
   content: { type: String, required: true }
