@@ -1,40 +1,44 @@
 const express = require("express");
 const router = express.Router();
-const Joi = require("joi");
 const UploadController = require("../middleware/upload");
-
 UploadController.setSubFolder("profiles");
+const { Profile, validate } = require("../models/profile");
 
-const profiles = [
-  {
-    _id: "P10",
-    name: "Sujish Pradeep",
-    peaceMarked: ["A1", "A3"],
-    bookMarked: ["A2", "A4"],
-    place: "Kerala",
-    bio: "Passionate about travel, food",
-    profilePicPath: "uploads/profiles/P10/profilepic.jpg"
-  },
+//POSTS
+router.post(
+  "/",
+  UploadController.upload.single("profilepic"),
+  async (req, res) => {
+    //Validate input, return 400 - Bad request if error
+    const { error } = validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
 
-  {
-    _id: "P20",
-    name: "Amrutha Muraleedharan",
-    peaceMarked: ["A3", "A4"],
-    bookMarked: ["A3", "A4"],
-    place: "Sydney",
-    bio: "Passionate about art, cooking",
-    profilePicPath: "uploads/profiles/P20/profilepic.jpg"
+    profile = new Profile({
+      name: req.body.name,
+      place: req.body.place,
+      bio: req.body.bio,
+      profilePicPath: req.file.path
+    });
+
+    try {
+      profile = await profile.save();
+      res.send(profile);
+    } catch (error) {
+      res.status(404).send(error.message);
+    }
   }
-];
+);
 
 //GET ALL
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
+  const profiles = await Profile.find();
+
   res.send(profiles);
 });
 
 //GET ID
-router.get("/:id", (req, res) => {
-  let profile = profiles.find(c => c._id === req.params.id);
+router.get("/:id", async (req, res) => {
+  let profile = await Profile.findById(req.params.id);
 
   if (!profile)
     return res
@@ -44,35 +48,39 @@ router.get("/:id", (req, res) => {
   res.send(profile);
 });
 
-//POSTS
-router.post("/", UploadController.upload.single("profilepic"), (req, res) => {
-  const { error } = validateProfile(req.body);
-  console.log("file", req.file);
+//PUT
+router.put(
+  "/:id",
+  UploadController.upload.single("profilepic"),
+  async (req, res) => {
+    try {
+      profile = await Profile.findByIdAndUpdate(
+        { _id: req.params.id },
+        {
+          $set: {
+            name: req.body.name,
+            place: req.body.place,
+            bio: req.body.bio,
+            profilePicPath: req.file.path
+          }
+        },
+        { new: true }
+      );
+      res.send(profile);
+    } catch (ex) {
+      return res.status(404).send("ID not found");
+    }
+  }
+);
 
-  //If invalid, return 400 - Bad request
-  console.log("req id", req.body._id);
-  if (error) return res.status(400).send(error.details[0].message);
-
-  let profile = profiles.find(c => c._id === req.body._id);
-  if (profile) return res.status(400).send("Profile already present");
-  profile = req.body;
-  profile.profilePicPath = req.file.path;
-  profiles.push(profile);
-  res.send(profile);
+//REMOVE
+router.delete("/:id", async (req, res) => {
+  try {
+    const profile = await Profile.findByIdAndRemove({ _id: req.params.id });
+    res.send(profile);
+  } catch (error) {
+    return res.status(404).send("ID not found");
+  }
 });
-
-function validateProfile(profile) {
-  schema = {
-    _id: Joi.string().required(),
-    name: Joi.string().required(),
-    peaceMarked: Joi.string().optional(),
-    bookMarked: Joi.string().optional(),
-    place: Joi.string().optional(),
-    bio: Joi.string().optional(),
-    profilePicPath: Joi.string().optional()
-  };
-
-  return Joi.validate(profile, schema);
-}
 
 module.exports = router;
