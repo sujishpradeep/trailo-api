@@ -73,6 +73,29 @@ router.put(
   }
 );
 
+//UPDATE PROFILE DATA
+router.put("/data/:id", async (req, res) => {
+  try {
+    profile = await Profile.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: {
+          name: req.body.name,
+          place: req.body.place,
+          bio: req.body.bio
+        }
+      },
+      { new: true }
+    );
+    res.send(profile);
+  } catch (ex) {
+    console.log(ex);
+    return res
+      .status(404)
+      .send("The profile with ID " + req.params.id + " not found");
+  }
+});
+
 //REMOVE
 router.delete("/:id", async (req, res) => {
   try {

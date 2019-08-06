@@ -80,15 +80,15 @@
 //   }
 // ];
 
-// async function seed() {
-//   mongoose
-//     .connect("mongodb://localhost/trailo", { useNewUrlParser: true })
-//     .then(() => Review.insertMany(reviews))
-//     .catch(err => console.error("Could not connect", err));
+async function seed() {
+  mongoose
+    .connect("mongodb://localhost/trailo", { useNewUrlParser: true })
+    .then(() => Review.insertMany(reviews))
+    .catch(err => console.error("Could not connect", err));
 
-//   mongoose.disconnect();
+  mongoose.disconnect();
 
-//   console.info("Done!");
-// }
+  console.info("Done!");
+}
 
 // seed();
