@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
 const { User, validate } = require("../models/user");
 const { Profile } = require("../models/profile");
+const bcrypt = require("bcrypt");
 
 //GET USER BY ID
 router.get("/:id", async (req, res) => {
@@ -31,18 +32,24 @@ router.post("/", async (req, res) => {
   try {
     let user = await User.findOne({ username: req.body.username });
 
-    if (user) return res.status(400).send("User already exists");
+    if (user) return res.status(400).send("User already reigstered");
 
     profile = new Profile({
       name: req.body.fullname
     });
+
+    console.log("req.body.password", req.body.password);
+    const salt = await bcrypt.genSalt(10);
+    const hashed = await bcrypt.hash(req.body.password, salt);
+    console.log("hashed", hashed);
+
     profile = await profile.save();
     console.log("profile", profile);
 
     user = new User({
       username: req.body.username,
       fullname: req.body.fullname,
-      password: req.body.password,
+      password: hashed,
       peaceMarked: [],
       bookMarked: [],
       profileid: profile._id
@@ -64,6 +71,7 @@ router.post("/", async (req, res) => {
         ])
       );
   } catch (error) {
+    console.log(error.message);
     res.status(404).send(error.message);
   }
 });
@@ -73,6 +81,13 @@ router.post("/auth/", async (req, res) => {
   try {
     let user = await User.findOne({ username: req.body.username });
     if (!user) return res.status(400).send("INVALID USER/PASSWORD");
+
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    if (!validPassword) return res.status(400).send("INVALID USER/PASSWORD");
+
     const token = generateAuthToken(user);
     res.send(token);
   } catch (error) {

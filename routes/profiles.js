@@ -58,7 +58,7 @@ router.put(
         { _id: req.params.id },
         {
           $set: {
-            name: req.body.name,
+            //       name: req.body.name,
             place: req.body.place,
             bio: req.body.bio,
             profilePicPath: req.file.path
@@ -80,7 +80,7 @@ router.put("/data/:id", async (req, res) => {
       { _id: req.params.id },
       {
         $set: {
-          name: req.body.name,
+          //      name: req.body.name,
           place: req.body.place,
           bio: req.body.bio
         }
