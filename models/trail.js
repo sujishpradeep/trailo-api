@@ -29,6 +29,7 @@ function validateTrail(trail) {
 
 exports.validate = validateTrail;
 exports.Trail = Trail;
+exports.trailSchema = trailSchema;
 
 //Sampple JSON structure
 // const trailCards = [

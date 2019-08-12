@@ -3,6 +3,8 @@ const router = express.Router();
 const UploadController = require("../middleware/upload");
 UploadController.setSubFolder("profiles");
 const { Profile, validate } = require("../models/profile");
+var ObjectId = require("mongoose").Types.ObjectId;
+const { Review } = require("../models/review");
 
 //POSTS
 router.post(
@@ -66,6 +68,22 @@ router.put(
         },
         { new: true }
       );
+
+      try {
+        let review = await Review.updateMany(
+          {
+            "profile._id": new ObjectId(profile._id)
+          },
+          {
+            $set: {
+              "profile.profilePicPath": req.file.path
+            }
+          }
+        );
+      } catch (error) {
+        console.log("error", error);
+      }
+
       res.send(profile);
     } catch (ex) {
       return res.status(404).send("ID not found");

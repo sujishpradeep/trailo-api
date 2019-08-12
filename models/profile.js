@@ -25,6 +25,7 @@ function validateProfile(profile) {
 
 exports.validate = validateProfile;
 exports.Profile = Profile;
+exports.profileSchema = profileSchema;
 
 // Sample JSON object
 //const profile =

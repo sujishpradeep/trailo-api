@@ -1,15 +1,18 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
+const trailSchema = require("./trail");
+const profileSchema = require("./profile");
 
 const reviewSchema = new mongoose.Schema({
-  user_id: { type: String, required: true },
-  user_name: { type: String, required: true },
-  trail_id: { type: String, required: true },
-  trail_state: { type: String, default: Date.now },
-  name: String,
-  trail_height: Number,
-  profilePicPath: String,
-  content: { type: [String], required: true }
+  content: { type: [String], required: true },
+  trail: {
+    type: trailSchema,
+    required: true
+  },
+  profile: {
+    type: profileSchema,
+    required: true
+  }
 });
 
 const Review = mongoose.model("Review", reviewSchema);

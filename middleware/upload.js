@@ -3,7 +3,6 @@ const fs = require("fs");
 let subfolder = "";
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    console.log("req", req.body);
     const dir = `./uploads/${subfolder}/${req.body._id}`;
     fs.mkdir(dir, { recursive: true }, err => {
       if (err) throw err;
